@@ -67,3 +67,11 @@
 .taskListContent {
   margin-top: 1.5rem;
 }
+
+.taskListContent ul{
+  list-style: none;
+}
+
+.taskListContent li + li {
+   margin-top: 0.75rem;
+}

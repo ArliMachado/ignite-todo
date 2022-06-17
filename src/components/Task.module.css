@@ -1,0 +1,45 @@
+.content {
+  height: 4.5rem;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  background: var(--gray-500);
+  border: 1px solid var(--gray-400);
+  border-radius: 0.5rem;
+}
+
+.content p {
+  color: var(--gray-100);
+  font-size: 0.875rem;
+  text-indent: 0px;
+  width: 100%;
+  margin: 0 0.75rem;
+}
+
+.content .taskComplete {
+  text-decoration:line-through;
+  color: var(--gray-300);
+}
+.content button {
+  border: 0;
+  background: transparent;
+  line-height: 0;
+  cursor: pointer;
+
+  display: flex;
+}
+
+.content button:last-child svg{
+  color: var(--gray-300);
+}
+
+.content button:last-child:hover svg{
+  color: var(--danger);
+  background: var(--gray-400);
+  border-radius: 4px;
+
+}

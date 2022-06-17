@@ -1,0 +1,25 @@
+.container input[type="checkbox"] {
+  display: none;
+}
+
+.container svg {
+  cursor: pointer;
+  transition: color 0.1s;
+
+}
+
+.checkIcon {
+  color: var(--purple);
+}
+
+.checkIcon:hover {
+  color: var(--purple-dark);
+}
+
+.circleIcon{
+  color: var(--blue);
+}
+
+.circleIcon:hover {
+  color: var(--blue-dark);
+}
