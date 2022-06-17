@@ -13,9 +13,10 @@ export interface ITask {
 interface ITaskProps {
   task: ITask,
   onCheckTask: () => void;
+  onRemoveTask: () => void;
 }
 
-export function Task({ task , onCheckTask }: ITaskProps) {
+export function Task({ task , onCheckTask, onRemoveTask }: ITaskProps) {
      return (
       <div className={styles.content}>
         <Checkbox isChecked={task.isChecked} onCheckTask={onCheckTask}/>
@@ -23,7 +24,7 @@ export function Task({ task , onCheckTask }: ITaskProps) {
           {task.text}
         </p>
         <button>
-          <Trash size={24} />
+          <Trash size={24} onClick={onRemoveTask}/>
         </button>
       </div>
 

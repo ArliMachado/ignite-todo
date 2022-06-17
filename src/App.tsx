@@ -1,59 +1,54 @@
 import "./global.css";
 import { Header } from "./components/Header";
-import {PlusCircle, Trash} from 'phosphor-react'
+import {PlusCircle} from 'phosphor-react'
 import { v4 } from "uuid"
 
 import styles from './App.module.css';
 import { TaskStatus } from "./components/TaskStatus";
 import { EmptyTasks } from "./components/EmptyTasks";
 import { ITask, Task } from "./components/Task";
-import { useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useMemo, useState } from "react";
 
-
-const taskList = [
-  {
-    id: v4(),
-    isChecked: false,
-    text: 'Integer urna interdum massa libero auctor neque turpis turpis semper. \
-            Duis vel sed fames integer.'
-  },
-  {
-    id: v4(),
-    isChecked: true,
-    text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. \
-            Eligendi voluptates quidem itaque officia velit modi voluptatum, \
-            earum tenetur nihil, vitae quaerat. Animi rerum distinctio optio \
-            minima quod, modi quo a.'
-  },
-  {
-    id: v4(),
-    isChecked: false,
-    text: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. \
-            Porro possimus quaerat laudantium corporis eveniet necessitatibus \
-            reiciendis aperiam saepe eligendi officiis unde velit, eius soluta \
-            distinctio. Adipisci odit itaque illum possimus?'
-  }
-];
 
 
 function App() {
-
-
-
+  const [newTask, setNewTask] = useState('');
   const [tasks, setTasks] = useState<ITask[]>([]);
 
-  useEffect(()=> {
-    function loadTasks() {
-      setTasks([...taskList]);
+  const tasksStatus = useMemo(() => {
+    const totalTasks = tasks.length;
+    const TotalTasksFinished = tasks.reduce((accumulator: number, task: ITask) => {
+      if (task.isChecked) {
+        accumulator += 1;
+      }
+      return accumulator
+    }, 0)
+
+    return {
+      totalTasks,
+      TotalTasksFinished
     }
 
-    loadTasks();
-  }, [])
+  }, [tasks])
+
+
+  function handleNewTaskText(event: ChangeEvent<HTMLInputElement>) {
+    setNewTask(event.target.value);
+  }
+
+  function handleCreateNewTask(event: FormEvent) {
+    event.preventDefault();
+
+    if (newTask) {
+      const task = { id: v4(), text: newTask, isChecked: false };
+      setTasks(state => [...state, task]);
+      setNewTask('');
+
+    }
+  }
 
   function handleTaskComplete(id: string){
 
-    console.log(id);
-    
     const newTasksList = tasks.map(task => {
       if (task.id === id) {
         task.isChecked = !task.isChecked;
@@ -65,14 +60,22 @@ function App() {
     
   }
 
-  
+  function handleRemoveTask(id :string) {
+    const newTasks = tasks.filter(task => task.id !== id);
+    setTasks(newTasks);
+  }
 
   return (
     <div>
       <Header />
       <div className={styles.wrapper}>
-        <form className={styles.taskForm}>
-          <input type="text" placeholder="Adicione uma nova tarefa" />
+        <form className={styles.taskForm} onSubmit={handleCreateNewTask}>
+          <input
+            type="text" 
+            placeholder="Adicione uma nova tarefa" 
+            value={newTask}
+            onChange={handleNewTaskText}
+          />
           <button type="submit">
             Criar
             <PlusCircle size={16}/>
@@ -83,13 +86,13 @@ function App() {
           <TaskStatus 
             title="Tarefas criadas"
             colorTitle="blue"
-            count="0"
+            count={tasksStatus.totalTasks.toString()}
           />
 
           <TaskStatus 
             title="Concluídas"
             colorTitle="purple"
-            count="2 de 50"
+            count={`${tasksStatus.TotalTasksFinished} de ${tasksStatus.totalTasks}`}//"2 de 50"
           />
         </div>
 
@@ -111,6 +114,7 @@ function App() {
                           <Task 
                               task={task}
                               onCheckTask={() => handleTaskComplete(task.id)}
+                              onRemoveTask={() => handleRemoveTask(task.id)}
                             />
                         </label>
                       </li>
